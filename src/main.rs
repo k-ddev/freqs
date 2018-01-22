@@ -54,7 +54,7 @@ Usage:
         }));
 
         // set up in and out files
-        let target = match fs::File::open(in_path.unwrap()) {
+        let target = match fs::File::open(in_path.clone().unwrap()) {
                 Ok(f) => f,
                 Err(_) => panic!("Could not open file. Bad file or path?")
         };
@@ -72,7 +72,7 @@ Usage:
         // set up bufreader, chunks, and byte occurence counts
         const CHUNKSIZE: usize = 1024 * 128;
         let mut reader = BufReader::with_capacity(CHUNKSIZE, target);
-        let chunks_total = fs::metadata(args.get(1).unwrap()).unwrap().len() as u32 / CHUNKSIZE as u32;
+        let chunks_total = (fs::metadata(in_path.unwrap()).unwrap().len() / CHUNKSIZE as u64) as u32;
         let mut chunks_done: u32 = 0;
         let mut byte_occurences = [0u32; 256];
 
